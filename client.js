@@ -44,7 +44,13 @@
     });
   };
 
-  Room.createSession = function(roomId) {
+  Room.destroyRoom = function(roomId) {
+    Rooms.remove( {_id: roomId}, function(error, result) {
+      return result;
+    } );
+  };
+
+  Room.createRoomSession = function(roomId) {
     return Session.set('currentRoom', roomId);
   };
 
