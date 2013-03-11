@@ -2,7 +2,7 @@
 
   Room = {};
 
-  var maxSize;
+  var maxSize = null;
 
   Room.setMax = function(size) {
     maxSize = size;
@@ -10,15 +10,22 @@
   };
 
   Room.availableRooms = function() {
-    return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch();
+    if(maxSize) {
+      return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch();
+    } else {
+      return Rooms.find({ current_count: { $gt: -1 } }).fetch();
+    }
   };
 
   Room.availableRoomCount = function() {
-    return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch().length;
+    if(maxSize) {
+      return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch().length;
+    } else {
+      return Rooms.find({ current_count: { $gt: -1 } }).fetch().length;
+    }
   };
 
   Room.makeRoom = function(callback, room_name) {
-
     var roomSize;
 
     if(maxSize) {
@@ -41,37 +48,48 @@
     return Session.set('currentRoom', roomId);
   };
 
-  Room.addToRoom = function(roomId, user) {
-    Rooms.update( {_id: roomId},
+  Room.addToRoom = function(user) {
+    Rooms.update( {_id: Session.get('currentRoom')},
                   {$inc: {current_count: 1} } );
-    Rooms.update( {_id: roomId},
+    Rooms.update( {_id: Session.get('currentRoom')},
                   {$push: {users: user} } );
   };
 
-  Room.removeFromRoom = function(roomId, user) {
-    Players.update( {_id: user},
-                    { $set : { room_id: null } } );
-    Rooms.update( {_id: roomId},
-                  {$inc: {current_count: -1} } );
-
-    var usersInRoom = Rooms.findOne({_id: roomId},
+  var getPlayerToRemove = function(user) {
+    var usersInRoom = Rooms.findOne({_id: Session.get('currentRoom')},
                                     {users: 1, _id: 0} ).users;
     var playerIdx = usersInRoom.indexOf(user);
     playerIdx = 'users.'+playerIdx;
     var playerLeaving = {};
     playerLeaving[playerIdx] = 1;
-    Rooms.update( {_id: roomId},
-                  {$unset: playerLeaving }, function(){
-                    Rooms.update( {_id: roomId},
-                    {$pull: {'users': null } }, function(){
-                      var r = Rooms.findOne({_id: roomId});
-                      if (!r.users.length) {
-                        Rooms.remove({_id: roomId});
-                      }
-                      Session.set('currentRoom', null);
-                      // console.log("the currentRoom is now: ", Session.get('currentRoom'));
-                    } );
+    return playerLeaving;
+  };
+
+  var removePlayer = function(playerQueryObject) {
+    Rooms.update( {_id: Session.get('currentRoom')},
+                  {$unset: playerQueryObject }, function(){
+
+                    Rooms.update( {_id: Session.get('currentRoom')},
+                                  {$pull: {'users': null } }, function(){
+
+                                    var r = Rooms.findOne({_id: Session.get('currentRoom')});
+                                    if (r.users.length === 0) {
+                                      Rooms.remove({_id: Session.get('currentRoom')});
+                                    }
+                                    Session.set('currentRoom', null);
+
+                                  } );
                   } );
+  };
+
+  Room.removeFromRoom = function(user) {
+    Players.update( {_id: user},
+                    { $set : { room_id: null } } );
+    Rooms.update( {_id: Session.get('currentRoom')},
+                  {$inc: {current_count: -1} } );
+
+    var playerQueryObject = getPlayerToRemove(user);
+    removePlayer(playerQueryObject);
   };
 
   return Room;
