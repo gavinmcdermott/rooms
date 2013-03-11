@@ -89,8 +89,10 @@
   };
 
   Room.removeFromRoom = function(user) {
-    Players.update( {_id: user},
-                    { $set : { room_id: null } } );
+    // Players.update( {_id: user},
+    //                 { $set : { room_id: null } } );
+    Meteor.users.update({_id: Meteor.userId() }, {$set:{"profile.currentRoom": null}});
+
     Rooms.update( {_id: Session.get('currentRoom')},
                   {$inc: {current_count: -1} } );
 
