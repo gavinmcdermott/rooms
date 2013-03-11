@@ -1,5 +1,6 @@
 (function(){
 
+  // Do not to use implied globals
   Room = {};
 
   var maxSize = null;
@@ -10,33 +11,25 @@
   };
 
   Room.availableRooms = function() {
+    var query = { current_count: { $gt: -1, $lt: maxSize } };
     if(maxSize) {
-      return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch();
-    } else {
-      return Rooms.find({ current_count: { $gt: -1 } }).fetch();
+      query.current_count.$lt = maxSize;
     }
+    return Rooms.find(query).fetch();
   };
 
   Room.availableRoomCount = function() {
-    if(maxSize) {
-      return Rooms.find({ current_count: { $gt: -1, $lt: maxSize } }).fetch().length;
-    } else {
-      return Rooms.find({ current_count: { $gt: -1 } }).fetch().length;
-    }
+    // todo: there's a count query, I think
+    return Room.availableRooms().length;
   };
 
+  // take the word Room out of all these class method names
+  // try Room.create()
   Room.makeRoom = function(callback, room_name) {
-    var roomSize;
-
-    if(maxSize) {
-      roomSize = maxSize;
-    } else {
-      roomSize = null;
-    }
-
+    // why would there be no room name?
     Rooms.insert({
       'current_count': 0,
-      'max_size': roomSize,
+      'max_size': maxSize,
       'name': room_name || null,
       'users': []
     }, function(error, roomId) {
@@ -55,13 +48,15 @@
   };
 
   Room.addToRoom = function(user) {
-    Rooms.update( {_id: Session.get('currentRoom')},
-                  {$inc: {current_count: 1} } );
-    Rooms.update( {_id: Session.get('currentRoom')},
-                  {$push: {users: user} } );
+    // if (!Session.get('currentRoom')) {
+      Rooms.update( {_id: Session.get('currentRoom')},
+                    {$inc: {current_count: 1} } );
+      Rooms.update( {_id: Session.get('currentRoom')},
+                    {$push: {users: user} } );
+    // }
   };
 
-  var getPlayerToRemove = function(user) {
+  var getUserToRemove = function(user) {
     var usersInRoom = Rooms.findOne({_id: Session.get('currentRoom')},
                                     {users: 1, _id: 0} ).users;
     var playerIdx = usersInRoom.indexOf(user);
@@ -89,17 +84,11 @@
   };
 
   Room.removeFromRoom = function(user) {
-    // Players.update( {_id: user},
-    //                 { $set : { room_id: null } } );
-    Meteor.users.update({_id: Meteor.userId() }, {$set:{"profile.currentRoom": null}});
-
     Rooms.update( {_id: Session.get('currentRoom')},
                   {$inc: {current_count: -1} } );
 
-    var playerQueryObject = getPlayerToRemove(user);
+    var playerQueryObject = getUserToRemove(user);
     removePlayer(playerQueryObject);
   };
-
-  return Room;
 
 }());
