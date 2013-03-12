@@ -17,6 +17,17 @@ Lobby
 ----
 To add a lobby to your page, simply add the ```{{> lobby}}``` helper to an HTML file. This will place a lobby widget on the page.
 
+In the lobby, you can check if your currentUser is inRoom with:
+
+```
+{{if inRoom}}
+  {{> room}}
+{{/if}}
+{{unless inRoom}}
+  {{> allRooms}}
+{{/unless}}
+```
+
 Rooms
 ----
 To add a room to your page, just add the ```{{> room}}``` helper to an HTML file. This will place give you a room context.
