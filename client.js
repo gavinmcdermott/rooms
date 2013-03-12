@@ -13,33 +13,41 @@ Meteor.autorun(function () {
   // Do not to use implied globals
   Room = {};
 
-  var maxSize = Infinity;
+  Room.addToCurrentlyOpen = function(userId) {
+    if (this.availableRooms()[0]) {
+      var room = this.availableRooms()[0];
+      console.log(room._id);
+      console.log(userId);
+      return this.addUser(room._id, userId);
+    }
+  };
 
-  Room.setMax = function(size) {
+  var maxSize = Infinity;
+  Room.setLimit = function(size) {
     maxSize = size;
     return;
+  };
+
+  Room.availableRooms = function() {
+    return getAvailableRooms(maxSize);
   };
 
   Room.currentSize = function(roomId) {
     return Rooms.findOne({_id: roomId}).users.length;
   };
 
-  Room.availableRooms = function() {
-    // console.log(
-    //   Rooms.find({ $where: 'users.length < maxSize' })
-    // );
-    // var query = { currentCount: { $gt: -1, $lt: maxSize } };
-    // if(maxSize) {
-    //   query.currentCount.$lt = maxSize;
-    // }
-    // return Rooms.find(query).fetch();
+  var getAvailableRooms = function(size) {
+    if (maxSize !== Infinity) {
+      return Rooms.find({ $where: 'this.users.length < '+size }).fetch();
+    } else {
+      return Rooms.find({}).fetch();
+    }
   };
 
   // take the word Room out of all these class method names
   // try Room.create()
   Room.makeRoom = function(roomName) {
     Rooms.insert({
-      // 'currentCount': 0,
       'maxSize': maxSize,
       'name': roomName,
       'users': []
@@ -50,7 +58,6 @@ Meteor.autorun(function () {
 
   Room.addUser = function(roomId, userId) {
     Session.set('currentRoom', roomId);
-    // Rooms.update( {_id: roomId }, {$inc: {currentCount: 1} } );
     Rooms.update( {_id: roomId }, {$push: {users: userId} } );
     LoggedUsers.insert({'id': userId }, {$set: {stamp: new Date().getTime() } } );
   };
@@ -66,23 +73,21 @@ Meteor.autorun(function () {
   };
 
   var removePlayer = function(playerQueryObject, currentRoom) {
-    Rooms.update( {_id: currentRoom},
-                  {$unset: playerQueryObject }, function(){
-
-                    Rooms.update( {_id: currentRoom},
-                                  {$pull: {'users': null } }, function(){
-
-                                    // Rooms.update( {_id: currentRoom},
-                                    //               {$inc: {currentCount: -1} } );
-                                    var r = Rooms.findOne({_id: currentRoom});
-                                    if (r.users.length === 0) {
-                                      Rooms.remove({_id: currentRoom});
-                                    }
-                                    LoggedUsers.remove({'id': Session.get('currentUser')} );
-                                    Session.set('currentRoom', null);
-
-                                  } );
-                  } );
+    Rooms.update({
+      _id: currentRoom}, {
+        $unset: playerQueryObject
+      }, function(){
+        Rooms.update( {_id: currentRoom}, {
+          $pull: {'users': null }
+        }, function(){
+          var r = Rooms.findOne({_id: currentRoom});
+          if (r.users.length === 0) {
+            Rooms.remove({_id: currentRoom});
+          }
+          LoggedUsers.remove({'id': Session.get('currentUser')} );
+          Session.set('currentRoom', null);
+        });
+    });
   };
 
   Room.removeFromRoom = function(user) {
