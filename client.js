@@ -1,59 +1,58 @@
+var heartBeat;
+
+Meteor.autorun(function () {
+  if (Session.get('currentRoom')) {
+    heartBeat = Meteor.setInterval(function(){
+      LoggedUsers.update({'id': Session.get('currentUser')}, {$set: {stamp: new Date().getTime() } } );
+    }, 1000);
+  }
+});
+
 (function(){
 
   // Do not to use implied globals
   Room = {};
 
-  var maxSize = null;
+  var maxSize = Infinity;
 
   Room.setMax = function(size) {
     maxSize = size;
     return;
   };
 
-  Room.availableRooms = function() {
-    var query = { current_count: { $gt: -1, $lt: maxSize } };
-    if(maxSize) {
-      query.current_count.$lt = maxSize;
-    }
-    return Rooms.find(query).fetch();
+  Room.currentSize = function(roomId) {
+    return Rooms.findOne({_id: roomId}).users.length;
   };
 
-  Room.availableRoomCount = function() {
-    // todo: there's a count query, I think
-    return Room.availableRooms().length;
+  Room.availableRooms = function() {
+    // console.log(
+    //   Rooms.find({ $where: 'users.length < maxSize' })
+    // );
+    // var query = { currentCount: { $gt: -1, $lt: maxSize } };
+    // if(maxSize) {
+    //   query.currentCount.$lt = maxSize;
+    // }
+    // return Rooms.find(query).fetch();
   };
 
   // take the word Room out of all these class method names
   // try Room.create()
-  Room.makeRoom = function(callback, room_name) {
-    // why would there be no room name?
+  Room.makeRoom = function(roomName) {
     Rooms.insert({
-      'current_count': 0,
-      'max_size': maxSize,
-      'name': room_name || null,
+      // 'currentCount': 0,
+      'maxSize': maxSize,
+      'name': roomName,
       'users': []
-    }, function(error, roomId) {
-      callback(roomId);
+    }, function(err, res) {
+      return res;
     });
   };
 
-  Room.destroyRoom = function(roomId) {
-    Rooms.remove( {_id: roomId}, function(error, result) {
-      return result;
-    } );
-  };
-
-  Room.createRoomSession = function(roomId) {
-    return Session.set('currentRoom', roomId);
-  };
-
-  Room.addToRoom = function(user) {
-    // if (!Session.get('currentRoom')) {
-      Rooms.update( {_id: Session.get('currentRoom')},
-                    {$inc: {current_count: 1} } );
-      Rooms.update( {_id: Session.get('currentRoom')},
-                    {$push: {users: user} } );
-    // }
+  Room.addUser = function(roomId, userId) {
+    Session.set('currentRoom', roomId);
+    // Rooms.update( {_id: roomId }, {$inc: {currentCount: 1} } );
+    Rooms.update( {_id: roomId }, {$push: {users: userId} } );
+    LoggedUsers.insert({'id': userId }, {$set: {stamp: new Date().getTime() } } );
   };
 
   var getUserToRemove = function(user) {
@@ -66,17 +65,20 @@
     return playerLeaving;
   };
 
-  var removePlayer = function(playerQueryObject) {
-    Rooms.update( {_id: Session.get('currentRoom')},
+  var removePlayer = function(playerQueryObject, currentRoom) {
+    Rooms.update( {_id: currentRoom},
                   {$unset: playerQueryObject }, function(){
 
-                    Rooms.update( {_id: Session.get('currentRoom')},
+                    Rooms.update( {_id: currentRoom},
                                   {$pull: {'users': null } }, function(){
 
-                                    var r = Rooms.findOne({_id: Session.get('currentRoom')});
+                                    // Rooms.update( {_id: currentRoom},
+                                    //               {$inc: {currentCount: -1} } );
+                                    var r = Rooms.findOne({_id: currentRoom});
                                     if (r.users.length === 0) {
-                                      Rooms.remove({_id: Session.get('currentRoom')});
+                                      Rooms.remove({_id: currentRoom});
                                     }
+                                    LoggedUsers.remove({'id': Session.get('currentUser')} );
                                     Session.set('currentRoom', null);
 
                                   } );
@@ -84,11 +86,10 @@
   };
 
   Room.removeFromRoom = function(user) {
-    Rooms.update( {_id: Session.get('currentRoom')},
-                  {$inc: {current_count: -1} } );
-
+    var room = Session.get('currentRoom');
     var playerQueryObject = getUserToRemove(user);
-    removePlayer(playerQueryObject);
+    removePlayer(playerQueryObject, room);
+    Meteor.clearInterval(heartBeat);
   };
 
 }());
