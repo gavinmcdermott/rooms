@@ -46,13 +46,13 @@ Meteor.autorun(function () {
 
   // take the word Room out of all these class method names
   // try Room.create()
-  Room.makeRoom = function(roomName) {
+  Room.makeRoom = function(roomName, callback) {
     Rooms.insert({
       'maxSize': maxSize,
       'name': roomName,
       'users': []
     }, function(err, res) {
-      return res;
+      callback(res);
     });
   };
 
