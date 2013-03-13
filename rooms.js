@@ -16,7 +16,7 @@ if(Meteor.isClient){
       }
     });
 
-    Template.rooms.inRoom = function() {
+    Template.room.inRoom = function() {
       return Session.get('currentRoom');
     };
 

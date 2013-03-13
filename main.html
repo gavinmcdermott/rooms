@@ -1,11 +1,20 @@
+<template name="allRooms">
+  {{#each rooms}}
+    <br />
+    <button class="join">Join</button>
+    {{ name }} -- {{ users.length }} users
+  {{/each}}
+</template>
 
 <!--  -->
 <template name="room">
-  {{> roomOverview}}
-  <br />
-  {{> roomChat}}
-  <br />
-  <button class="leave">Leave Room</button>
+  {{#if inRoom}}
+    {{> roomOverview}}
+    <br />
+    {{> roomChat}}
+    <br />
+    <button class="leave">Leave Room</button>
+  {{/if}}
 </template>
 
 <template name="roomOverview">
@@ -33,15 +42,4 @@
   <label class="label">Enter a name / Make a room</label><br />
   <input type="text" class="textInput" placeholder="Enter a room name"><br />
   <button type="submit" class="create">Create Room</button>
-</template>
-
-
-
-<!--  -->
-<template name="allRooms">
-  {{#each rooms}}
-    <br />
-    <button class="join">Join</button> --
-    {{ name }} -- {{ users.length }} users<br />
-  {{/each}}
 </template>
