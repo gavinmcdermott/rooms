@@ -1,45 +1,47 @@
+<template name="createRoom">
+  <label class="label">Enter a name / Make a room</label><br />
+  <input type="text" class="textInput" placeholder="Enter a room name"><br />
+  <button type="submit" class="create">Create Room</button><br>
+</template>
+
+<!--  -->
+
 <template name="allRooms">
   {{#each rooms}}
-    <br />
-    <button class="join">Join</button>
-    {{ name }} -- {{ users.length }} users
+    {{ name }} <br>
+    {{ users.length }} people <br>
+    <button class="join">Join</button><br>
   {{/each}}
 </template>
 
 <!--  -->
+
 <template name="room">
   {{#if inRoom}}
-    {{> roomOverview}}
-    <br />
-    {{> roomChat}}
-    <br />
+    {{> roomOverview}}<br/>
+    {{> roomChat}}<br/>
     <button class="leave">Leave Room</button>
   {{/if}}
 </template>
 
+<!--  -->
+
 <template name="roomOverview">
-  Room: {{ roomName }} <br />
-  Has: {{ currentCount }} people<br />
+  Room: {{ roomName }}
+  Has: {{ currentCount }} people
 </template>
+
+<!--  -->
 
 <template name="roomChat">
   <div class="msg-box">
   {{#each messages}}
-    Message: {{ message }} <br />
-    uId: {{ user_id }} <br />
-    sent: {{ timestamp }} <br /><br /><br />
+    Message: {{ message }}
+    uId: {{ user_id }}
+    sent: {{ timestamp }}
   {{/each}}
   </div><br />
   <label class="label">Enter Message</label><br />
   <input type="text" class="room-msg" placeholder="Send a message"><br />
   <button type="submit" class="submit">Send to Room</button>
-</template>
-
-
-
-<!--  -->
-<template name="createRoom">
-  <label class="label">Enter a name / Make a room</label><br />
-  <input type="text" class="textInput" placeholder="Enter a room name"><br />
-  <button type="submit" class="create">Create Room</button>
 </template>
