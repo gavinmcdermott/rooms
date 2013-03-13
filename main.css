@@ -1,0 +1,24 @@
+.createRoom {
+  width: 100%;
+  height: 100px;
+  background-color: #AEAEAE;
+  margin-top: 20px;
+  float: right;
+  /*clear: both;*/
+}
+
+.allRooms {
+  width: 400px;
+  max-height: 300px;
+  overflow: scroll;
+  float: right;
+  background-color: gray;
+  clear: both;
+}
+
+.room {
+  width: 400px;
+  height: 100%;
+  background-color: yellow;
+  float: left;
+}
