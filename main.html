@@ -1,0 +1,48 @@
+
+<!--  -->
+<template name="room">
+  {{> roomOverview}}
+  <br />
+  {{> roomChat}}
+  <br />
+  <button class="btn leave">Leave Room</button>
+</template>
+
+<template name="roomOverview">
+  Room: {{ roomName }} <br />
+  Has: {{ currentCount }} people<br />
+  <!-- roomUsers to go here -->
+</template>
+
+<template name="roomChat">
+  <div class="msg-box">
+  {{#each messages}}
+    Message: {{ message }} <br />
+    uId: {{ user_id }} <br />
+    sent: {{ timestamp }} <br /><br /><br />
+  {{/each}}
+  </div><br />
+  <label class="label">Enter Message</label><br />
+  <input type="text" class="room-msg" placeholder="Send a message"><br />
+  <button type="submit" class="btn submit">Send to Room</button>
+</template>
+
+
+
+<!--  -->
+<template name="createRoom">
+  <label class="label">Enter a name / Make a room</label><br />
+  <input type="text" class="textInput" placeholder="Enter a room name"><br />
+  <button type="submit" class="btn create">Create Room</button>
+</template>
+
+
+
+<!--  -->
+<template name="allRooms">
+  {{#each rooms}}
+    <br />
+    <button class="btn join">Join</button> --
+    {{ name }} -- {{ users.length }} users<br />
+  {{/each}}
+</template>
