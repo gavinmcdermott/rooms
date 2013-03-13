@@ -1,47 +1,54 @@
 <template name="createRoom">
-  <label class="label">Enter a name / Make a room</label><br />
-  <input type="text" class="textInput" placeholder="Enter a room name"><br />
-  <button type="submit" class="create">Create Room</button><br>
+  <div class="createRoom">
+    <input type="text" class="nameRoomField" placeholder="Enter a room name"><br />
+    <button type="submit" class="button create">Create Room</button><br>
+  </div>
 </template>
 
 <!--  -->
 
 <template name="allRooms">
+  <div class='roomList'>
   {{#each rooms}}
-    {{ name }} <br>
-    {{ users.length }} people <br>
-    <button class="join">Join</button><br>
+    <div class="listedRoom">
+      <span class="listedRoomName">{{ name }}</span>
+      <span class="listedRoomCount">{{ users.length }} people</span>
+      <button class="button join">Join</button>
+    </div>
   {{/each}}
+  </div>
 </template>
 
 <!--  -->
 
 <template name="room">
   {{#if inRoom}}
-    {{> roomOverview}}<br/>
-    {{> roomChat}}<br/>
-    <button class="leave">Leave Room</button>
+    <div class="singleRoom">
+      {{> roomChat}}
+    </div>
   {{/if}}
 </template>
 
 <!--  -->
 
 <template name="roomOverview">
-  Room: {{ roomName }}
-  Has: {{ currentCount }} people
+  <div class="roomDetails">
+    Room: {{ roomName }}
+  </div>
 </template>
 
 <!--  -->
 
 <template name="roomChat">
-  <div class="msg-box">
-  {{#each messages}}
-    Message: {{ message }}
-    uId: {{ user_id }}
-    sent: {{ timestamp }}
-  {{/each}}
-  </div><br />
-  <label class="label">Enter Message</label><br />
-  <input type="text" class="room-msg" placeholder="Send a message"><br />
-  <button type="submit" class="submit">Send to Room</button>
+  <div class="msgList">
+    {{#each messages}}
+      <span class="msgSender">From: {{ user_email }}</span>
+      <span class="msgText">{{ message }}</span>
+    {{/each}}
+  </div>
+  <div class="msgEnter">
+    <input type="text" class="msgEnterField" placeholder="Send a message"><br />
+    <button type="submit" class="button submit">Send to Room</button><br />
+    <button class=" button leave">Leave Room</button>
+  </div>
 </template>

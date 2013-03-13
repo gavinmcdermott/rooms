@@ -36,6 +36,7 @@ if(Meteor.isClient){
 
     Template.allRooms.events = {
       'click .join': function() {
+        console.log('this');
         Room.addUser(this._id, Session.get('currentUser'));
         Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": this._id}});
       }
@@ -65,12 +66,13 @@ if(Meteor.isClient){
 
     Template.roomChat.events = {
       'click .submit': function() {
-        var msg = $('.room-msg').val();
-        $('.room-msg').val('');
+        var msg = $('.msgEnterField').val();
+        $('.msgEnterField').val('');
         Messages.insert({
           'message': msg,
           'user_id': Session.get('currentUser'),
           'room_id': Session.get('currentRoom'),
+          'user_email': Meteor.users.find({_id:'5v3Tu28cnY3PbZNa3'}).fetch()[0].emails[0].address,
           'timestamp': new Date().getTime()
         });
       }

@@ -1,24 +1,55 @@
 .createRoom {
-  width: 100%;
+  width: 50%;
   height: 100px;
   background-color: #AEAEAE;
   margin-top: 20px;
   float: right;
-  /*clear: both;*/
-}
-
-.allRooms {
-  width: 400px;
-  max-height: 300px;
-  overflow: scroll;
-  float: right;
-  background-color: gray;
   clear: both;
 }
 
-.room {
-  width: 400px;
-  height: 100%;
+.roomList {
+  background-color: gray;
+  width: 50%;
+  height: 350px;
+  overflow: scroll;
+  float: right;
+  clear: both;
+}
+
+.listedRoom {
+  height: 80px;
+  margin-top: 10px;
+  clear: both;
+}
+
+.listedRoomName, .listedRoomCount {
+  display: block;
+}
+
+.singleRoom {
+  width: 43%;
+  height: 330px;
+  margin-top: 120px;
+  padding: 10px;
   background-color: yellow;
-  float: left;
+}
+
+.msgList {
+  width: 85%;
+  height: 150px;
+  overflow: scroll;
+  background-color: white;
+  margin: 0 auto;
+}
+
+.msgText {
+  color: green;
+  display: block;
+}
+
+.msgEnter {
+  width: 85%;
+  height: 100px;
+  background-color: gray;
+  margin: 10px auto 0 auto;
 }
