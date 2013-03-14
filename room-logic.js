@@ -22,6 +22,10 @@ Meteor.autorun(function () {
     }
   };
 
+  Room.options = {
+    clearEmpty: false
+  };
+
   var maxSize = Infinity;
   Room.setLimit = function(size) {
     maxSize = size;
@@ -58,8 +62,15 @@ Meteor.autorun(function () {
 
   Room.addUser = function(roomId, userId) {
     Session.set('currentRoom', roomId);
-    Rooms.update( {_id: roomId }, {$push: {users: userId} } );
+    if (!userInRoom(roomId, userId)) {
+      Rooms.update( {_id: roomId }, {$push: {users: userId} } );
+    }
     LoggedUsers.insert({'id': userId }, {$set: {stamp: new Date().getTime() } } );
+  };
+
+  var userInRoom = function(roomId, userId) {
+    var users = Rooms.findOne({_id: roomId}, {users: 1, _id: 0} ).users;
+    return _.contains(users, userId);
   };
 
   var getUserToRemove = function(user) {
@@ -80,10 +91,12 @@ Meteor.autorun(function () {
         Rooms.update( {_id: currentRoom}, {
           $pull: {'users': null }
         }, function(){
-          // var r = Rooms.findOne({_id: currentRoom});
-          // if (r.users.length === 0) {
-          //   Rooms.remove({_id: currentRoom});
-          // }
+          if (Room.options.clearEmpty) {
+            var r = Rooms.findOne({_id: currentRoom});
+            if (r.users.length === 0) {
+              Rooms.remove({_id: currentRoom});
+            }
+          }
           LoggedUsers.remove({'id': Session.get('currentUser')} );
           Session.set('currentRoom', null);
         });

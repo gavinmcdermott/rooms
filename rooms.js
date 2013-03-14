@@ -101,5 +101,13 @@ if(Meteor.isClient){
         }
       }
     };
+
+    Handlebars.registerHelper('Test', function(){
+      return Session.get('currentRoom');
+    });
+
+
+
+
   });
 }
