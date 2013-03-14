@@ -91,6 +91,7 @@ Meteor.autorun(function () {
   };
 
   Room.removeFromRoom = function(user) {
+    console.log('in remove from room');
     var room = Session.get('currentRoom');
     var playerQueryObject = getUserToRemove(user);
     removePlayer(playerQueryObject, room);
