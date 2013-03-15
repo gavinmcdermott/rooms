@@ -19,30 +19,7 @@ if(Meteor.isClient){
     Template.room.inRoom = function() {
       return Session.get('currentRoom');
     };
-    //
-    // Handlebars.registerHelper('inRoom', function() {
-    //   return Session.get('currentRoom');
-    // });
 
-    // Template.createRoomControls.events = {
-    //   "click .create": function() {
-        // var roomName = $('input.nameRoomField').val();
-        // Room.makeRoom(roomName, function(newRoomId){
-        //   Room.addUser(newRoomId, Session.get('currentUser'));
-        //   Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
-        // });
-    //   },
-    //   "keyup .nameRoomField": function(event) {
-        // var roomName = $(".nameRoomField").val();
-        // if (event.type == "keyup" && event.which == 13 && roomName !== '') {
-        //   Room.makeRoom(roomName, function(newRoomId){
-        //     Room.addUser(newRoomId, Session.get('currentUser'));
-        //     Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
-        //   });
-        // }
-    //   }
-    // };
-    //
     Handlebars.registerHelper('createRoomControls', function(){
       var roomCreationControls = '<div class="createRoomControls"><input type="text" class="nameOfRoomField" placeholder="Enter a room name"><br /><button type="submit" class="button createRoomButton">Create Room</button><br></div>';
       return new Handlebars.SafeString(roomCreationControls);
@@ -71,23 +48,20 @@ if(Meteor.isClient){
     });
 
 
-    // Template.allRooms.rooms = function() {
-    //   return Rooms.find({}).fetch();
-    // };
-    //
     Handlebars.registerHelper('rooms', function(){
       return Rooms.find({}).fetch();
     });
 
-    Template.allRooms.events = {
-      'click .join': function() {
-        if (Session.get('currentRoom')) {
-          Session.set('currentRoom', null);
-        }
-        Room.addUser(this._id, Session.get('currentUser'));
-        Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": this._id}});
+    $(document).on('click', '.join', function(e){
+      console.log(e.currentTarget.id);
+      if (Session.get('currentRoom')) {
+        Session.set('currentRoom', null);
       }
-    };
+      Room.addUser(e.currentTarget.id, Session.get('currentUser'));
+      Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": e.currentTarget.id}});
+    });
+
+
 
     // Template.roomOverview.roomName = function() {
     //   var room = Rooms.findOne({_id: Session.get('currentRoom')});
