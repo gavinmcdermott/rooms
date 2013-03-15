@@ -50,7 +50,7 @@ Meteor.autorun(function () {
 
   // take the word Room out of all these class method names
   // try Room.create()
-  Room.makeRoom = function(roomName, callback) {
+  Room.create = function(roomName, callback) {
     Rooms.insert({
       'maxSize': maxSize,
       'name': roomName,
@@ -61,6 +61,10 @@ Meteor.autorun(function () {
   };
 
   Room.addUser = function(roomId, userId) {
+    if (Session.get('currentRoom')) {
+      Room.removeFromRoom(userId, roomId);
+      Session.set('currentRoom', null);
+    }
     Session.set('currentRoom', roomId);
     if (!userInRoom(roomId, userId)) {
       Rooms.update( {_id: roomId }, {$push: {users: userId} } );

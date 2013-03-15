@@ -16,7 +16,7 @@ if(Meteor.isClient){
       }
     });
 
-    Template.rooms.inRoom = function() {
+    Template.room.inRoom = function() {
       return Session.get('currentRoom');
     };
 
@@ -28,7 +28,7 @@ if(Meteor.isClient){
     $(document).on('click', '.createRoomButton', function(){
       var roomName = $('input.nameOfRoomField').val();
       if (roomName !== '') {
-        Room.makeRoom(roomName, function(newRoomId){
+        Room.create(roomName, function(newRoomId){
           Room.addUser(newRoomId, Session.get('currentUser'));
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
         });
@@ -39,7 +39,7 @@ if(Meteor.isClient){
       var roomName = $(event.currentTarget).attr('value');
       console.log(roomName);
       if (event.type == "keyup" && event.which == 13 && roomName !== '') {
-        Room.makeRoom(roomName, function(newRoomId){
+        Room.create(roomName, function(newRoomId){
           Room.addUser(newRoomId, Session.get('currentUser'));
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
         });
