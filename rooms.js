@@ -21,7 +21,7 @@ if(Meteor.isClient){
     };
 
     Handlebars.registerHelper('createRoomControls', function(){
-      var roomCreationControls = '<div class="createRoomControls"><input type="text" class="nameOfRoomField" placeholder="Enter a room name"><br /><button type="submit" class="button createRoomButton">Create Room</button><br></div>';
+      var roomCreationControls = '<div class="createRoomControls"><input type="text" class="nameOfRoomField" placeholder="Enter a room name"><button type="submit" class="button createRoomButton">Create Room</button></div>';
       return new Handlebars.SafeString(roomCreationControls);
     });
 
@@ -127,10 +127,5 @@ if(Meteor.isClient){
         }
       }
     };
-
-
-
-
-
   });
 }

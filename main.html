@@ -1,19 +1,19 @@
 <template name="room">
   <div class="singleRoom">
-    {{ roomName }}
+    <span class="roomTitle">{{ roomName }}</span>
     {{> roomChat}}
   </div>
 </template>
 
 
 <template name="roomChat">
-  <div class="msgList">
+  <div class="roomMessageList">
     {{#each roomMessages}}
       <span class="msgSender">From: {{ user_email }}</span>
       <span class="msgText">{{ message }}</span>
     {{/each}}
   </div>
-  <div class="msgEnter">
+  <div class="messageEntryArea">
     <input type="text" class="msgEnterField" placeholder="Send a message"><br />
     <button type="submit" class="button sendMsgToRoom">Send to Room</button><br />
     <button class=" button leaveRoom">Leave Room</button>
