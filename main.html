@@ -1,27 +1,16 @@
-<template name="rooms">
-  {{ Test }}
-  {{ createRoomControls }}
-  {{ rooms}}
-  {{> room}}
-</template>
-
-
 <template name="room">
-  {{#if inRoom}}
-    <div class="singleRoom">
-      {{ roomName }}
-      {{> roomChat}}
-    </div>
-  {{/if}}
+  <div class="singleRoom">
+    {{ roomName }}
+    {{> roomChat}}
+  </div>
 </template>
 
 <!--  -->
 
-<template name="roomOverview">
+<!-- <template name="roomOverview">
   <div class="roomDetails">
-    Room: {{ roomName }}
   </div>
-</template>
+</template> -->
 
 <!--  -->
 
@@ -34,7 +23,7 @@
   </div>
   <div class="msgEnter">
     <input type="text" class="msgEnterField" placeholder="Send a message"><br />
-    <button type="submit" class="button submit">Send to Room</button><br />
-    <button class=" button leave">Leave Room</button>
+    <button type="submit" class="button sendMsgToRoom">Send to Room</button><br />
+    <button class=" button leaveRoom">Leave Room</button>
   </div>
 </template>

@@ -16,7 +16,7 @@ if(Meteor.isClient){
       }
     });
 
-    Template.room.inRoom = function() {
+    Template.rooms.inRoom = function() {
       return Session.get('currentRoom');
     };
 
@@ -24,13 +24,10 @@ if(Meteor.isClient){
       var roomCreationControls = '<div class="createRoomControls"><input type="text" class="nameOfRoomField" placeholder="Enter a room name"><br /><button type="submit" class="button createRoomButton">Create Room</button><br></div>';
       return new Handlebars.SafeString(roomCreationControls);
     });
-    var createRoomClicked = function(name) {
-      console.log(name);
-    };
 
     $(document).on('click', '.createRoomButton', function(){
       console.log('test');
-      var roomName = $('input.nameRoomField').val();
+      var roomName = $('input.nameOfRoomField').val();
       Room.makeRoom(roomName, function(newRoomId){
         Room.addUser(newRoomId, Session.get('currentUser'));
         Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
@@ -38,7 +35,8 @@ if(Meteor.isClient){
     });
 
     $(document).on('keyup', '.nameOfRoomField', function(event) {
-      var roomName = $(".nameRoomField").val();
+      var roomName = $("input.nameRoomField").val();
+      console.log(roomName);
       if (event.type == "keyup" && event.which == 13 && roomName !== '') {
         Room.makeRoom(roomName, function(newRoomId){
           Room.addUser(newRoomId, Session.get('currentUser'));
@@ -59,7 +57,6 @@ if(Meteor.isClient){
 
       res = res + '</div>';
       return new Handlebars.SafeString(res);
-
     });
 
     $(document).on('click', '.joinRoom', function(e){
@@ -71,47 +68,40 @@ if(Meteor.isClient){
       Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": e.currentTarget.id}});
     });
 
-
-
-    // Template.roomOverview.roomName = function() {
-    //   var room = Rooms.findOne({_id: Session.get('currentRoom')});
-    //   return room && room.name;
-    // };
-    // Below is a handlebars replacement helper for the above function
     Handlebars.registerHelper('roomName', function(){
       var room = Rooms.findOne({_id: Session.get('currentRoom')});
       return room && room.name;
     });
 
-    // Template.roomOverview.currentCount = function() {
-    //   if(Session.get('currentRoom')){
-    //     return Room.currentSize(Session.get('currentRoom'));
-    //   }
-    // };
-    // Below is a handlebars replacement helper for the above function
     Handlebars.registerHelper('roomUserCount', function(){
       if(Session.get('currentRoom')){
         return Room.currentSize(Session.get('currentRoom'));
       }
     });
 
+
+
+
+    Handlebars.registerHelper('inRoom', function(){
+      if (Session.get('currentRoom')) {
+        return Rooms.findOne({_id: Session.get('currentRoom')});
+      }
+    });
+
+
     Template.room.events = {
-      'click .leave': function() {
+      'click .leaveRoom': function() {
         Room.removeFromRoom(Meteor.userId(), Session.get('currentRoom'));
         Meteor.users.update({_id: Meteor.userId() }, {$set:{"profile.currentRoom": null}});
       }
     };
 
-    // Template.roomChat.messages = function() {
-    //   return Messages.find({'room_id' : Session.get("currentRoom")}, {sort: {created_at: 1}});
-    // };
-    //
     Handlebars.registerHelper('roomMessages', function() {
       return Messages.find({'room_id' : Session.get("currentRoom")}, {sort: {created_at: 1}});
     });
 
     Template.roomChat.events = {
-      'click .submit': function() {
+      'click .sendMsgToRoom': function() {
         var msg = $('.msgEnterField').val();
         $('.msgEnterField').val('');
         Messages.insert({
@@ -137,9 +127,6 @@ if(Meteor.isClient){
       }
     };
 
-    // Handlebars.registerHelper('Test', function(){
-    //   return Session.get('currentRoom');
-    // });
 
 
 
