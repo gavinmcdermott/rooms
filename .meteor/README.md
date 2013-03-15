@@ -2,7 +2,7 @@ meteor-rooms
 ============
 A simple smart package for creating rooms in your Meteor app.
 
-v0.1.0
+v0.1.0 - This is ALPHA quality
 
 API Docs
 --------
@@ -78,10 +78,61 @@ Meteor Template
 ------
 {{> room }} - adds a Meteor Template showing a user's current room.
 
+
 API
------
-To create a room: `Room.create( roomname, callback )`
-- the call back returns the new room object and allows you to automatically add the user to the newly created room
+====
+Collections:
+------
+`LoggedUsers` - A collection used for tracking when a user is in a room. A user is automatically added to this collection when they are added to a room, and removed from this collecton upon leaving it. You do not have to worry about this.
+
+This allows for removal of users if someone exists a client session without explicitly leaving a room.
+
+A LoggedUser object contains:
+
+    id: currentUser's ._id
+    stamp: time when the user enters the room
+
+`Rooms` - A collection used to hold all rooms that are created.
+
+A Rooms object contains:
+
+      'maxSize': maxSize,
+      'name': roomName,
+      'users': []
+
+- maxSize is a property set on the rooms object. For more info on this, check out the API docs below.
+- users is an array containing all active users in the room at that current time.
+
+`Messages` - A collection that holds all messages for your app.
+
+An example Message Object creation:
+
+    'message': msg,
+    'user_id': Session.get('currentUser'),
+    'room_id': Session.get('currentRoom'),
+    'user_email': Meteor.users.find({_id: Session.get('currentUser') }).fetch()[0].emails[0].address,
+    'timestamp': new Date().getTime()
 
 
 
+Methods
+---
+Create a room:
+
+    Room.create( roomname, callback )
+
+The callback returns the new room object. This allows for things like allowing you to automatically add a user to the newly created room.
+
+Example:
+
+    Room.create(roomName, function(newRoomId){
+      Room.addUser(newRoomId, Session.get('currentUser'));
+      Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
+    });
+
+
+To add a user to a room:
+
+    Room.addUser(newRoomId, Session.get('currentUser'));
+
+- more docs on the way this week.
