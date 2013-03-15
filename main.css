@@ -18,6 +18,10 @@
   border-radius: 6px;
 }
 
+.nameOfRoomField::-webkit-input-placeholder {
+  color: #ebebeb;
+}
+
 .createRoomButton {
 /*  margin: 0px auto;
   display: block; */
@@ -27,23 +31,25 @@
   width: 200px;
   font-size: 1.25em;
   border-radius: 6px;
+  border-style: none;
 }
 
 .roomList {
   text-align: center;
   width: 33%;
   height: 580px;
+  background-color: #f2f0f0;
   overflow: scroll;
   float: right;
   clear: both;
 }
 
 .listedRoom {
-  height: 120px;
   background-color: #f2f0f0;
   border-top: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
   padding-top: 15px;
+  padding-bottom: 15px;
   clear: both;
 }
 
@@ -52,13 +58,20 @@
   font-size: 1.25em;
 }
 
+.listedRoomCount {
+  margin-top: 10px;
+  color: #d9d9d9;
+}
+
 .joinRoom {
-  margin: 10px auto;
+  margin: 15px auto;
   display: block;
   height: 45px;
   width: 200px;
   font-size: 1.25em;
   border-radius: 6px;
+  color: white;
+  background: #d9d9d9;
   border-style: none;
 }
 
@@ -81,6 +94,7 @@
   height: 350px;
   overflow: scroll;
   background-color: white;
+  border-radius: 6px;
   margin: 0 auto;
 }
 
@@ -105,6 +119,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   display: block;
+  border-radius: 6px;
 }
 
 .msgEnterField {
@@ -114,6 +129,10 @@
   height: 35px;
   font-size: 1.75em;
   border-radius: 6px;
+}
+
+.msgEnterField::-webkit-input-placeholder {
+  color: #ebebeb;
 }
 
 .sendMsgToRoom {

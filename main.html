@@ -1,6 +1,6 @@
 <template name="room">
   <div class="singleRoom">
-    <span class="roomTitle">Room {{ roomName }}</span>
+    <span class="roomTitle">{{ roomName }}</span>
     {{> roomChat}}
   </div>
 </template>
@@ -10,7 +10,7 @@
   <div class="roomMessageList">
     {{#each roomMessages}}
       <span class="msgSender">{{ user_email }}:</span>
-      <span class="msgText">{{ message }}</span>
+      <span class="msgText">> {{ message }}</span>
     {{/each}}
   </div>
   <div class="messageEntryArea">
