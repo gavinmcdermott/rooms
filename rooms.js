@@ -48,11 +48,21 @@ if(Meteor.isClient){
     });
 
 
+
     Handlebars.registerHelper('rooms', function(){
-      return Rooms.find({}).fetch();
+      var roomsInList = Rooms.find({}).fetch();
+      var res = '<div class="roomList">';
+
+      for (var i = 0; i < roomsInList.length; i++) {
+        res = res + '<div class="listedRoom"><span class="listedRoomName">'+ roomsInList[i].name + '</span><span class="listedRoomCount">' + roomsInList[i].users.length + ' user(s)</span><button id="' + roomsInList[i]._id + '" class="button joinRoom">Join</button></div>';
+      }
+
+      res = res + '</div>';
+      return new Handlebars.SafeString(res);
+
     });
 
-    $(document).on('click', '.join', function(e){
+    $(document).on('click', '.joinRoom', function(e){
       console.log(e.currentTarget.id);
       if (Session.get('currentRoom')) {
         Session.set('currentRoom', null);

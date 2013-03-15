@@ -1,34 +1,10 @@
 <template name="rooms">
   {{ Test }}
   {{ createRoomControls }}
-  {{> allRooms}}
+  {{ rooms}}
   {{> room}}
 </template>
 
-<!--  -->
-
-<!-- <template name="createRoomControls">
-  <div class="createRoom">
-    <input type="text" class="nameRoomField" placeholder="Enter a room name"><br />
-    <button type="submit" class="button create">Create Room</button><br>
-  </div>
-</template> -->
-
-<!--  -->
-
-<template name="allRooms">
-  <div class='roomList'>
-  {{#each rooms}}
-    <div class="listedRoom">
-      <span class="listedRoomName">{{ name }}</span>
-      <span class="listedRoomCount">{{ users.length }} people</span>
-      <button id={{ _id }} class="button join">Join</button>
-    </div>
-  {{/each}}
-  </div>
-</template>
-
-<!--  -->
 
 <template name="room">
   {{#if inRoom}}
