@@ -26,16 +26,17 @@ if(Meteor.isClient){
     });
 
     $(document).on('click', '.createRoomButton', function(){
-      console.log('test');
       var roomName = $('input.nameOfRoomField').val();
-      Room.makeRoom(roomName, function(newRoomId){
-        Room.addUser(newRoomId, Session.get('currentUser'));
-        Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
-      });
+      if (roomName !== '') {
+        Room.makeRoom(roomName, function(newRoomId){
+          Room.addUser(newRoomId, Session.get('currentUser'));
+          Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
+        });
+      }
     });
 
     $(document).on('keyup', '.nameOfRoomField', function(event) {
-      var roomName = $("input.nameRoomField").val();
+      var roomName = $(event.currentTarget).attr('value');
       console.log(roomName);
       if (event.type == "keyup" && event.which == 13 && roomName !== '') {
         Room.makeRoom(roomName, function(newRoomId){
