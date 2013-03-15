@@ -8,10 +8,10 @@ Meteor.autorun(function () {
   }
 });
 
-(function(){
+Room = (function(){
 
   // Do not to use implied globals
-  Room = {};
+  var Room = {};
 
   Room.addToCurrentlyOpen = function(userId) {
     if (this.availableRooms()[0]) {
@@ -112,5 +112,7 @@ Meteor.autorun(function () {
     removePlayer(playerQueryObject, roomId);
     Meteor.clearInterval(heartBeat);
   };
+
+  return Room;
 
 }());
