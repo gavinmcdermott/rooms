@@ -1,56 +1,83 @@
 .createRoomControls {
   background-color: green;
+  padding-top: 25px;
   width: 100%;
-  height: 150px;
+  height: 145px;
   margin: 0 auto;
 }
 
 .nameOfRoomField {
-  margin: 0 auto;
-  display: block;
+  margin-left: 45px;
+  margin-top: 32px;
+/*  margin: 0 auto;
+  display: block;*/
+  width: 480px;
+  height: 35px;
+  /*text-align: center;*/
+  font-size: 1.75em;
+  border-radius: 6px;
 }
 
 .createRoomButton {
-  margin: 0 auto;
-  display: block;
+/*  margin: 0px auto;
+  display: block; */
+  margin-left: 115px;
+  margin-top: 30px;
+  height: 45px;
+  width: 200px;
+  font-size: 1.25em;
+  border-radius: 6px;
 }
 
 .roomList {
   text-align: center;
-  width: 50%;
-  height: 350px;
+  width: 33%;
+  height: 580px;
   overflow: scroll;
   float: right;
   clear: both;
 }
 
 .listedRoom {
-  height: 80px;
+  height: 120px;
   background-color: gray;
   border-bottom: 1px solid green;
+  padding-top: 15px;
   clear: both;
 }
 
 .listedRoomName, .listedRoomCount {
   display: block;
+  font-size: 1.25em;
+}
+
+.joinRoom {
+  margin: 10px auto;
+  display: block;
+  height: 45px;
+  width: 200px;
+  font-size: 1.25em;
+  border-radius: 6px;
 }
 
 .singleRoom {
-  width: 50%;
-  height: 350px;
+  width: 67%;
+  height: 580px;
   background-color: yellow;
 }
 
 .roomTitle {
   margin: 0 auto;
+  padding: 15px 0 15px 45px;
+  /*text-align: center;*/
   display: block;
-  text-align: center;
   background-color: blue;
+  font-size: 1.75em;
 }
 
 .roomMessageList {
   width: 85%;
-  height: 150px;
+  height: 250px;
   overflow: scroll;
   background-color: white;
   margin: 0 auto;
@@ -63,7 +90,35 @@
 
 .messageEntryArea {
   width: 85%;
-  height: 100px;
   background-color: gray;
   margin: 10px auto 0 auto;
+  padding-top: 15px;
+}
+
+.msgEnterField {
+  margin: 0 auto;
+  display: block;
+  width: 480px;
+  height: 35px;
+  font-size: 1.75em;
+  border-radius: 6px;
+}
+
+.sendMsgToRoom {
+  margin-left: 12px;
+  display: block;
+  height: 45px;
+  width: 200px;
+  font-size: 1.25em;
+  border-radius: 6px;
+}
+
+.leaveRoom {
+  margin-left: 45px;
+  margin-top: 35px;
+  display: block;
+  height: 45px;
+  width: 200px;
+  font-size: 1.25em;
+  border-radius: 6px;
 }

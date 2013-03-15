@@ -1,6 +1,6 @@
 <template name="room">
   <div class="singleRoom">
-    <span class="roomTitle">{{ roomName }}</span>
+    <span class="roomTitle">Room {{ roomName }}</span>
     {{> roomChat}}
   </div>
 </template>
@@ -14,8 +14,8 @@
     {{/each}}
   </div>
   <div class="messageEntryArea">
-    <input type="text" class="msgEnterField" placeholder="Send a message"><br />
+    <input type="text" class="msgEnterField" placeholder="enter your message"><br />
     <button type="submit" class="button sendMsgToRoom">Send to Room</button><br />
-    <button class=" button leaveRoom">Leave Room</button>
   </div>
+  <button class="button leaveRoom">Leave Room</button>
 </template>
