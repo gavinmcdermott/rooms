@@ -48,12 +48,23 @@ if(Meteor.isClient){
 
 
 
-    Handlebars.registerHelper('rooms', function(){
+    Handlebars.registerHelper('roomsList', function(){
       var roomsInList = Rooms.find({}).fetch();
       var res = '<div class="roomList">';
 
       for (var i = 0; i < roomsInList.length; i++) {
-        res = res + '<div class="listedRoom"><span class="listedRoomName">'+ roomsInList[i].name + '</span><span class="listedRoomCount">' + roomsInList[i].users.length + ' user(s)</span><button id="' + roomsInList[i]._id + '" class="button joinRoom">Join</button></div>';
+        res = res
+          + '<div class="listedRoom">'
+            + '<span class="listedRoomName">'
+              + roomsInList[i].name
+            + '</span>'
+            + '<span class="listedRoomCount">'
+              + roomsInList[i].users.length + ' user(s)'
+            + '</span>'
+            + '<button id="' + roomsInList[i]._id + '" class="button joinRoom">'
+              + 'Join'
+            + '</button>'
+          + '</div>';
       }
 
       res = res + '</div>';
