@@ -20,7 +20,7 @@ In a Meteorite-managed app: `$ mrt add rooms`
 
 Run the Demo
 -----------
-[link coming soon]
+http://roomsdemo.meteor.com/
 
 Get Started
 ======
