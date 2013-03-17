@@ -8,7 +8,7 @@ Meteor.setInterval(function(){
     Rooms.update({}, {$pull: {'users': expiredUsers[i].id} }, function(e) {
       console.log('success!!!');
       console.log('we removed: ', expiredUsers[i].id);
-    } );
+    });
     LoggedUsers.remove({'id': expiredUsers[i].id});
   }
 }, 5000);

@@ -72,7 +72,7 @@ if(Meteor.isClient){
     });
 
     $(document).on('click', '.joinRoom', function(e){
-      console.log(e.currentTarget.id);
+      // console.log(e.currentTarget.id);
       if (Session.get('currentRoom')) {
         Session.set('currentRoom', null);
       }

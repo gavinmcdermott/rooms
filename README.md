@@ -1,6 +1,6 @@
 meteor-rooms
 ============
-A simple smart package for creating rooms in your Meteor app.
+A simple smart package for creating rooms in your Meteor app - works with Meteor Accounts.
 
 v0.1.0 - This is ALPHA quality
 
@@ -74,9 +74,15 @@ Handlebar Helpers
 
 These helpers are not mandatory. They add a simple interface to get up  and running quickly. You can create rooms and manage the Meteor Session through the meteor-rooms API.
 
-Meteor Template
+Meteor Templates
 ------
-{{> room }} - adds a Meteor Template showing a user's current room.
+`{{> room }}` - this adds a Meteor Template showing a user's current room.
+
+Visual Customization
+-------
+Styling for the helper and templates above is simple and can be overridden using your own css.
+
+If you don't want to use the Handlebar Templates provided, the API exposes some other basic methods you can use.
 
 
 API
@@ -85,14 +91,15 @@ Collections:
 ------
 `LoggedUsers` - A collection used for tracking when a user is in a room. A user is automatically added to this collection when they are added to a room, and removed from this collecton upon leaving it. You do not have to worry about this.
 
-This allows for removal of users if someone exists a client session without explicitly leaving a room.
+This allows for removal of users in case a client closes their session without explicitly leaving the room.
 
 A LoggedUser object contains:
 
     id: currentUser's ._id
     stamp: time when the user enters the room
 
-`Rooms` - A collection used to hold all rooms that are created.
+------
+`Rooms` - A collection that holds all rooms that have been created.
 
 A Rooms object contains:
 
@@ -102,7 +109,10 @@ A Rooms object contains:
 
 - maxSize is a property set on the rooms object. For more info on this, check out the API docs below.
 - users is an array containing all active users in the room at that current time.
+- Rooms also has an initial `Rooms.options` object that allows you to set a `clearEmpty` property to `true` or `false`. The default is false, and if set to true, a room that has 0 users in it will be removed from the collection. More functionality is coming that will allow you to control the removal based on messages in the room, etc.
+- [`maxSize` is a wip and, if set, will manage showing rooms that aren't yet full and add users to the appropriate rooms]
 
+------
 `Messages` - A collection that holds all messages for your app.
 
 An example Message Object creation:
@@ -114,8 +124,21 @@ An example Message Object creation:
     'timestamp': new Date().getTime()
 
 
-
 Methods
+---
+Dependencies: Currently, meteor-rooms depends on using Meteor Accounts and several Session properties that you'll need to handle in your client code.
+
+---
+`currentUser` - needs to be set to the Meteor.userId() if there is a Meteor user logged in.
+an example:
+
+    if (Meteor.user()) {
+      Session.set('currentUser', Meteor.userId());
+    }
+
+-----
+`currentRoom` - this is the ID of the room that the user is currently in. Default is set to `null`, and is changed to the current room when a user enters a room.
+
 ---
 Create a room:
 
@@ -130,11 +153,16 @@ Example:
       Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
     });
 
+---
+Add a user to a room:
 
-To add a user to a room:
-
+    if (Session.get('currentRoom')) {
+        Session.set('currentRoom', null);
+    }
     Room.addUser(newRoomId, Session.get('currentUser'));
 
-- more docs on the way soon
+---
+Remove a user from a room:
 
+    Room.removeFromRoom(Meteor.userId(), Session.get('currentRoom'));
 
