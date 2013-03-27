@@ -1,4 +1,7 @@
 {
+  "meteor": {
+    "tag": "v0.5.4"
+  },
   "name": "rooms",
   "description": "Rooms package for managing rooms and users",
   "homepage": "https://github.com/gavinmcdermott/rooms",
