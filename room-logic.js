@@ -1,3 +1,6 @@
+// heartbeat is a ping to the server to let us know a user is logged in
+// to a room. If they close the browser and leave a room that way, the
+// heartbeat will expire and we'll remove the user after a period of time.
 var heartBeat;
 
 Meteor.autorun(function () {
@@ -10,23 +13,20 @@ Meteor.autorun(function () {
 
 Room = (function(){
 
-  // Do not to use implied globals
-  var Room = {};
-
-  Room.addToCurrentlyOpen = function(userId) {
-    if (this.availableRooms()[0]) {
-      var room = this.availableRooms()[0];
-      console.log(room._id);
-      console.log(userId);
-      return this.addUser(room._id, userId);
-    }
-  };
+  var Room = {},
+      maxSize = Infinity;
 
   Room.options = {
     clearEmpty: false
   };
 
-  var maxSize = Infinity;
+  Room.addToCurrentlyOpen = function(userId) {
+    if (this.availableRooms()[0]) {
+      var room = this.availableRooms()[0];
+      return this.addUser(room._id, userId);
+    }
+  };
+
   Room.setLimit = function(size) {
     maxSize = size;
     return;
@@ -48,8 +48,6 @@ Room = (function(){
     }
   };
 
-  // take the word Room out of all these class method names
-  // try Room.create()
   Room.create = function(roomName, callback) {
     Rooms.insert({
       'maxSize': maxSize,
@@ -61,17 +59,9 @@ Room = (function(){
   };
 
   Room.addUser = function(roomId, userId) {
-    // if (Session.get('currentRoom')) {
-    //   console.log('they were in room', Session.get('currentRoom'));
-    //   Room.removeFromRoom(userId, Session.get('currentRoom'));
-    //   Session.set('currentRoom', null);
-    // }
-    // Session.set('currentRoom', roomId);
-    // console.log('we are adding them to ', Session.get('currentRoom'));
     if (!userInRoom(roomId, userId)) {
       Rooms.update( {_id: roomId }, {$push: {users: userId} } );
     }
-    console.log('adding user to ', roomId);
     LoggedUsers.insert({'id': userId }, {$set: {stamp: new Date().getTime() } } );
   };
 
@@ -92,7 +82,6 @@ Room = (function(){
 
   var removePlayer = function(playerQueryObject, currentRoom) {
     Session.set('currentRoom', null);
-    console.log('current room is now null');
     Rooms.update({
       _id: currentRoom}, {
         $unset: playerQueryObject
@@ -107,8 +96,6 @@ Room = (function(){
             }
           }
           LoggedUsers.remove({'id': Session.get('currentUser')} );
-          // Session.set('currentRoom', null);
-          console.log('user is removed');
         });
     });
   };

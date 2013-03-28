@@ -28,6 +28,9 @@ if(Meteor.isClient){
     $(document).on('click', '.createRoomButton', function(){
       var roomName = $('input.nameOfRoomField').val();
       if (roomName !== '') {
+        if (Session.get('currentRoom')) {
+          Room.removeFromRoom(userId, Session.get('currentRoom'));
+        }
         Room.create(roomName, function(newRoomId){
           Room.addUser(newRoomId, Session.get('currentUser'));
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
@@ -37,16 +40,16 @@ if(Meteor.isClient){
 
     $(document).on('keyup', '.nameOfRoomField', function(event) {
       var roomName = $(event.currentTarget).attr('value');
-      console.log(roomName);
       if (event.type == "keyup" && event.which == 13 && roomName !== '') {
+        if (Session.get('currentRoom')) {
+          Room.removeFromRoom(userId, Session.get('currentRoom'));
+        }
         Room.create(roomName, function(newRoomId){
           Room.addUser(newRoomId, Session.get('currentUser'));
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
         });
       }
     });
-
-
 
     Handlebars.registerHelper('roomsList', function(){
       var roomsInList = Rooms.find({}).fetch();
@@ -72,11 +75,8 @@ if(Meteor.isClient){
     });
 
     $(document).on('click', '.joinRoom', function(e){
-      // console.log(e.currentTarget.id);
       if (Session.get('currentRoom')) {
-        console.log('removing user from: ', Session.get('currentRoom'));
         Room.removeFromRoom(userId, Session.get('currentRoom'));
-        // Session.set('currentRoom', null);
       }
       Room.addUser(e.currentTarget.id, Session.get('currentUser'));
       Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": e.currentTarget.id}});
@@ -93,15 +93,11 @@ if(Meteor.isClient){
       }
     });
 
-
-
-
     Handlebars.registerHelper('inRoom', function(){
       if (Session.get('currentRoom')) {
         return Rooms.findOne({_id: Session.get('currentRoom')});
       }
     });
-
 
     Template.room.events = {
       'click .leaveRoom': function() {
@@ -126,6 +122,7 @@ if(Meteor.isClient){
           'timestamp': new Date().getTime()
         });
       },
+
       "keyup .msgEnterField": function(event) {
         var msg = $('.msgEnterField').val();
         if (event.type == "keyup" && event.which == 13 && msg !== '') {
