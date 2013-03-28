@@ -36,6 +36,9 @@ if(Meteor.isClient){
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
         });
       }
+      Meteor.setTimeout(function() {
+        $('.roomList').scrollTop(100000);
+      }, 10);
     });
 
     $(document).on('keyup', '.nameOfRoomField', function(event) {
@@ -48,6 +51,9 @@ if(Meteor.isClient){
           Room.addUser(newRoomId, Session.get('currentUser'));
           Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": newRoomId}});
         });
+        Meteor.setTimeout(function() {
+          $('.roomList').scrollTop(100000);
+        }, 10);
       }
     });
 
