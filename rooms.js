@@ -74,7 +74,9 @@ if(Meteor.isClient){
     $(document).on('click', '.joinRoom', function(e){
       // console.log(e.currentTarget.id);
       if (Session.get('currentRoom')) {
-        Session.set('currentRoom', null);
+        console.log('removing user from: ', Session.get('currentRoom'));
+        Room.removeFromRoom(userId, Session.get('currentRoom'));
+        // Session.set('currentRoom', null);
       }
       Room.addUser(e.currentTarget.id, Session.get('currentUser'));
       Meteor.users.update({_id: Session.get('currentUser') }, {$set:{"profile.currentRoom": e.currentTarget.id}});

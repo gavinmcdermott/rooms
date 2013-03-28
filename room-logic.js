@@ -61,14 +61,17 @@ Room = (function(){
   };
 
   Room.addUser = function(roomId, userId) {
-    if (Session.get('currentRoom')) {
-      Room.removeFromRoom(userId, roomId);
-      Session.set('currentRoom', null);
-    }
-    Session.set('currentRoom', roomId);
+    // if (Session.get('currentRoom')) {
+    //   console.log('they were in room', Session.get('currentRoom'));
+    //   Room.removeFromRoom(userId, Session.get('currentRoom'));
+    //   Session.set('currentRoom', null);
+    // }
+    // Session.set('currentRoom', roomId);
+    // console.log('we are adding them to ', Session.get('currentRoom'));
     if (!userInRoom(roomId, userId)) {
       Rooms.update( {_id: roomId }, {$push: {users: userId} } );
     }
+    console.log('adding user to ', roomId);
     LoggedUsers.insert({'id': userId }, {$set: {stamp: new Date().getTime() } } );
   };
 
@@ -88,6 +91,8 @@ Room = (function(){
   };
 
   var removePlayer = function(playerQueryObject, currentRoom) {
+    Session.set('currentRoom', null);
+    console.log('current room is now null');
     Rooms.update({
       _id: currentRoom}, {
         $unset: playerQueryObject
@@ -102,7 +107,8 @@ Room = (function(){
             }
           }
           LoggedUsers.remove({'id': Session.get('currentUser')} );
-          Session.set('currentRoom', null);
+          // Session.set('currentRoom', null);
+          console.log('user is removed');
         });
     });
   };
