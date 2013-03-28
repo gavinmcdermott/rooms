@@ -107,6 +107,9 @@ if(Meteor.isClient){
     };
 
     Handlebars.registerHelper('roomMessages', function() {
+      Meteor.setTimeout(function() {
+        $('.roomMessageList').scrollTop(10000);
+      }, 10);
       return Messages.find({'room_id' : Session.get("currentRoom")}, {sort: {created_at: 1}});
     });
 
@@ -121,6 +124,9 @@ if(Meteor.isClient){
           'user_email': Meteor.users.find({_id: Session.get('currentUser') }).fetch()[0].emails[0].address,
           'timestamp': new Date().getTime()
         });
+        Meteor.setTimeout(function() {
+          $('.roomMessageList').scrollTop(100000);
+        }, 10);
       },
 
       "keyup .msgEnterField": function(event) {
@@ -134,6 +140,9 @@ if(Meteor.isClient){
             'user_email': Meteor.users.find({_id: Session.get('currentUser') }).fetch()[0].emails[0].address,
             'timestamp': new Date().getTime()
           });
+          Meteor.setTimeout(function() {
+            $('.roomMessageList').scrollTop(100000);
+          }, 10);
         }
       }
     };
