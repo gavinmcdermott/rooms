@@ -2,7 +2,7 @@
   "meteor": {
     "tag": "v0.5.4"
   },
-  "name": "rooms",
+  "name": "roomsPkg",
   "description": "Rooms package for managing rooms and users",
   "homepage": "https://github.com/gavinmcdermott/roomsPkg.git",
   "author": "Gavin McDermott  (http://gavinmcdermott.github.com/)",
