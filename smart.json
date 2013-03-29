@@ -7,6 +7,6 @@
   "homepage": "https://github.com/gavinmcdermott/rooms",
   "author": "Gavin McDermott  (http://gavinmcdermott.github.com/)",
   "version": "0.1.1",
-  "git": "https://github.com/gavinmcdermott/rooms",
+  "git": "https://github.com/gavinmcdermott/rooms.git",
   "packages": {}
 }
