@@ -4,7 +4,7 @@
   },
   "name": "rooms",
   "description": "Rooms package for managing rooms and users",
-  "homepage": "https://github.com/gavinmcdermott/rooms",
+  "homepage": "https://github.com/gavinmcdermott/rooms.git",
   "author": "Gavin McDermott  (http://gavinmcdermott.github.com/)",
   "version": "0.1.1",
   "git": "https://github.com/gavinmcdermott/rooms.git",
