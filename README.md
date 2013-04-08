@@ -4,7 +4,7 @@ A simple smart package for creating rooms in your Meteor app - works with Meteor
 
 v0.1.0 - This is ALPHA quality
 
-API Docs
+API Doc
 --------
 https://github.com/gavinmcdermott/rooms
 
