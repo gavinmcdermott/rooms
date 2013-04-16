@@ -2,7 +2,7 @@ meteor-rooms
 ============
 A simple smart package for creating rooms in your Meteor app - works with Meteor Accounts.
 
-v0.1.0 - This is ALPHA quality
+v0.1.0 - This is ALPHA quality and needs to be updated to work with releases 0.6.0 and later.
 
 API Doc
 --------
@@ -18,9 +18,6 @@ Install meteor-rooms
 -----------
 In a Meteorite-managed app: `$ mrt add rooms`
 
-Run the Demo
------------
-- link coming soon
 
 Get Started
 ======
